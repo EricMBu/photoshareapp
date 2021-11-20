@@ -21,11 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ImagePicker _picker = ImagePicker();
 
-  List<Uint8List> _imageFileList = [];
-
-  // set _imageFile(XFile? value) {
-  //   _imageFileList = value == null ? null : [value];
-  // }
+  final List<Uint8List> _imageFileList = [];
 
   Future getImage() async {
     final XFile? photo = await _picker.pickImage(
@@ -43,36 +39,28 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.red,
       appBar: AppBar(
         title: const Text("PhotoShare"),
         centerTitle: true,
       ),
-      // body: Center(
-      //   child: Text(
-      //     "add a photo",
-      //     style: TextStyle(
-      //       fontSize: 20.0,
-      //       color: Colors.grey[600],
-      //       fontFamily: 'Poppins',
-      //     ),
-      //   ),
-      // ),
-      body: ListView.builder(
-          itemCount: _imageFileList.length,
-          itemBuilder: (context, index) {
-            final image = _imageFileList[index];
-            return Image.memory(image);
-          }),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         child: const Text("add photo"),
       ),
+      body: GridView.builder(
+        itemCount: _imageFileList.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (context, index) {
+          final image = _imageFileList[index];
+          return Image.memory(
+            image,
+            fit: BoxFit.cover,
+          );
+        },
+      ),
     );
-  }
-
-  State<StatefulWidget> createState() {
-    // ignore: todo
-    // TODO: implement createState
-    throw UnimplementedError();
   }
 }
