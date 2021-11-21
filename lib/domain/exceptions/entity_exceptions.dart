@@ -1,0 +1,1 @@
+class UnregisteredEntity implements Exception {}
