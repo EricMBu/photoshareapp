@@ -17,7 +17,7 @@ class AppBindings implements Bindings {
         fenix: true);
     Get.lazyPut<UserRepositoryContract>(() => UserRepository(), fenix: true);
 
-    // Services
+    // Firebase Services
     Get.lazyPut(() => const FirebaseCoreService(), fenix: true);
     Get.lazyPut(() => const FirebaseAuthService(), fenix: true);
     Get.lazyPut(() => const CloudFirestoreService(), fenix: true);
