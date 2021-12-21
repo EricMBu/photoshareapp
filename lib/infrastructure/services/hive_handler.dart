@@ -32,4 +32,11 @@ class HiveHandler {
   Future<LazyBox<GalleryImage>> openGalleryFolder(String folderName) {
     return Hive.openLazyBox<GalleryImage>(folderName);
   }
+
+  Future<void> addImageToBox(
+    LazyBox<GalleryImage> box,
+    GalleryImage img,
+  ) async {
+    await box.add(img);
+  }
 }

@@ -44,7 +44,7 @@ class _HomeViewState extends State<HomeView> {
 
                           return FolderCard(
                             folderName: item,
-                            onPressed: () {},
+                            onPressed: () => controller.navigateToFolder(item),
                           );
                         },
                       ),
