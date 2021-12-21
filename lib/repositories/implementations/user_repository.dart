@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:photoshare/domain/models/aggregates/uid.dart';
 import 'package:photoshare/domain/models/credentials/credentials.dart';
 import 'package:photoshare/infrastructure/services/firebase/auth.dart';
 import 'package:photoshare/repositories/contracts/user_repository_contract.dart';
@@ -24,29 +23,33 @@ class UserRepository implements UserRepositoryContract {
   }
 
   @override
-  Future<Uid> getUserUid() {
-    return Future.value(Uid(_authService.userUid));
+  Future<String> getUserUid() {
+    return Future.value(_authService.userUid);
   }
 
   @override
   Future<void> signUp(Credentials credentials) async {
-    assert(credentials.email != null, 'Email missing from credentials');
-    assert(credentials.password != null, 'Password missing from credentials');
+    assert(
+      credentials.isFilled(),
+      'Credentials need to be filled for sign up.',
+    );
 
     await _authService.signUpWithEmail(
-      credentials.email!.value,
-      credentials.password!.value,
+      credentials.email!,
+      credentials.password!,
     );
   }
 
   @override
   Future<void> signIn(Credentials credentials) async {
-    assert(credentials.email != null, 'Email missing from credentials');
-    assert(credentials.password != null, 'Password missing from credentials');
+    assert(
+      credentials.isFilled(),
+      'Credentials need to be filled for sign in.',
+    );
 
     await _authService.signInWithEmail(
-      credentials.email!.value,
-      credentials.password!.value,
+      credentials.email!,
+      credentials.password!,
     );
   }
 }

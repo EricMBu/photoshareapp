@@ -19,6 +19,8 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_storage:
+  hive:
+  hive_flutter:
 
   # Management
   get:
@@ -40,7 +42,8 @@ dev_dependencies:
   flutter_lints:
 
   build_runner: 
-  json_serializable: 
+  json_serializable:
+  hive_generator:
 
 flutter:
   uses-material-design: true

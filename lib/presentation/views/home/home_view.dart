@@ -1,7 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
+import 'package:photoshare/application/controllers/home_controller.dart';
+import 'package:photoshare/presentation/widgets/folder_card.dart';
+import 'package:photoshare/presentation/widgets/get_string_dialog.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -11,47 +12,62 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final ImagePicker _picker = ImagePicker();
-
-  final List<Uint8List> _imageFileList = [];
-
-  Future getImage() async {
-    final XFile? photo = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-    );
-    if (photo != null) {
-      final bytes = await photo.readAsBytes();
-      setState(() {
-        _imageFileList.add(bytes);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.red,
-      appBar: AppBar(
-        title: const Text("PhotoShare"),
-        centerTitle: true,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        child: const Text("add photo"),
-      ),
-      body: GridView.builder(
-        itemCount: _imageFileList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemBuilder: (context, index) {
-          final image = _imageFileList[index];
-          return Image.memory(
-            image,
-            fit: BoxFit.cover,
-          );
-        },
+    return GetX<HomeController>(
+      init: HomeController(),
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("PhotoShare"),
+            centerTitle: true,
+          ),
+          body: controller.loading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: controller.galleryFolders.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 150,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemBuilder: (_, index) {
+                          final item = controller.galleryFolders[index];
+
+                          return FolderCard(
+                            folderName: item,
+                            onPressed: () {},
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        child: const Text('Create new folder'),
+                        onPressed: () => createNewFolder(controller),
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+
+  Future<void> createNewFolder(HomeController controller) async {
+    await Get.dialog(
+      GetStringDialog(
+        title: 'New Folder Name',
+        onSubmit: (value) => controller.createFolder(value),
       ),
     );
   }
